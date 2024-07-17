@@ -1,4 +1,13 @@
 
+# Project-specific.
+# AF: TODO: Fin.
+/node1/share/*
+!/node1/share/.keep
+/pw1/data/*
+!/pw1/data/.keep
+/pw1/share/*
+!/pw1/share/.keep
+
 # Old etc.
 *.old*
 *.orig

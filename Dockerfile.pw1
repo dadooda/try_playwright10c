@@ -1,0 +1,51 @@
+
+FROM mcr.microsoft.com/playwright:v1.45.1-jammy
+
+# Настройки.
+ARG ME="./pw1"
+ARG JOE="pwuser"
+ARG UID="1000"
+
+#
+# Готовимся ставить пакеты, подключаем репозиторий GitLab.
+#
+
+# Обновляем источники.
+RUN apt-get update
+
+RUN apt-get install -y curl
+
+# AF: OPTIMIZE: Это надо для runner.
+# # Прописываем репозитории и GPG-ключи GitLab.
+# RUN curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
+
+#
+# Ставим необходимое.
+#
+
+RUN apt-get install -y \
+  iputils-ping \
+  less \
+  nano \
+  sudo
+
+# AF: OPTIMIZE: Это надо для runner.
+#   git \
+#   gitlab-runner \
+
+#
+# Делаем пользователя Васю, настраиваем ему `sudo`.
+#
+
+# NOTE: Опираемся на `pwuser`, он уже есть в образе.
+
+RUN usermod -G sudo ${JOE}
+COPY --chown=root ${ME}/sudo_nopasswd /etc/sudoers.d
+
+# Дальше всё от имени Васи.
+USER ${JOE}
+
+WORKDIR /home/${JOE}
+
+# Умную донастройку и запуск сделает скрипт.
+ENTRYPOINT ["/entrypoint.sh"]

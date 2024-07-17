@@ -1,0 +1,29 @@
+
+version: "3.5"
+
+services:
+  # AF: TODO: Fin.
+  node1:
+    build:
+      context: ./
+      dockerfile: Dockerfile.node1
+    volumes:
+      # Настройки.
+      - ./node1/entrypoint.sh:/entrypoint.sh
+      - ./node1/share:/share
+
+  # AF: TODO: Fin.
+  pw1:
+    build:
+      context: ./
+      dockerfile: Dockerfile.pw1
+    volumes:
+      # Настройки.
+      - ./pw1/entrypoint.sh:/entrypoint.sh
+      - ./pw1/share:/share
+      # AF: TODO: Fin.
+      #- ./pw1/try1:/mnt/try1:ro
+
+      # Живучие данные.
+      - ./pw1/data/pwuser-try1:/home/pwuser/try1
+      - ./pw1/try1/README.md:/home/pwuser/try1:ro
