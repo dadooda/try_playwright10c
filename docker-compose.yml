@@ -17,6 +17,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.pw1
+    ports:
+      # AF: TODO: Fin. Это "UI mode".
+      - 3333:3333
     volumes:
       # Настройки.
       - ./pw1/entrypoint.sh:/entrypoint.sh
