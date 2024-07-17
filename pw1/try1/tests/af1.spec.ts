@@ -8,7 +8,7 @@ interface Creds {
 
 const credsAdmin1: Creds = {
   email: 'test_admin@inventos.ru',
-  password: "gk54aerpgp3k4",
+  password: 'gk54aerpgp3k4',
 };
 
 const credsInvalid: Creds = {
