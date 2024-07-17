@@ -10,7 +10,7 @@ services:
     volumes:
       # Настройки.
       - ./node1/entrypoint.sh:/entrypoint.sh
-      - ./node1/share:/share
+      - ./node1/share/:/share/
 
   # AF: TODO: Fin.
   pw1:
@@ -20,10 +20,16 @@ services:
     volumes:
       # Настройки.
       - ./pw1/entrypoint.sh:/entrypoint.sh
-      - ./pw1/share:/share
+      # AF: TODO: Возможно, следует явно размечать диры.
+      - ./pw1/share/:/share/
       # AF: TODO: Fin.
       #- ./pw1/try1:/mnt/try1:ro
 
+      # Рабочий материал. Строго логический порядок!
+      - ./pw1/data/pwuser-try1/:/home/pwuser/try1/
+      - ./pw1/try1/README.md:/home/pwuser/try1/README.md:ro
+      - ./pw1/try1/package.json:/home/pwuser/try1/package.json:ro
+      - ./pw1/try1/playwright.config.ts:/home/pwuser/try1/playwright.config.ts:ro
+      - ./pw1/try1/tests/:/home/pwuser/try1/tests/:ro
+
       # Живучие данные.
-      - ./pw1/data/pwuser-try1:/home/pwuser/try1
-      - ./pw1/try1/README.md:/home/pwuser/try1:ro
