@@ -11,8 +11,6 @@ import * as type from './type';
  * @module
  */
 export module target {
-  // AF: TODO: Fin.
-
   export const QA: type.Target = {
     name: "QA",
     url: "https://qa.webcaster.ru",

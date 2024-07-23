@@ -7,18 +7,13 @@ import * as preset from '../lib/preset';
 import * as setup from '../lib/setup';
 import * as util from '../lib/util';
 
-// ЦТ: Орудуем формой логина через класс страницы.
-test('bebe', async ({ page }) => {
-  await page.goto(`${setup.target.QA.url}/admin`);
+// ЦТ: Логинимся и шастаем по меню админки.
+// test('fefe', async ({ page }) => {
 
-  const lgp = new pageCat.Login({ page });
-  await lgp.fillEnterSuccess(preset.auth.SUPER);
+// })
 
-  // await util.sleep(5000);
-})
-
-
-
+// AF: TODO: Fin.
+const target = setup.target.QA;
 
 // ЦТ: Логинимся корректным логином, переходим на "ФиР".
 test.skip('hehe', async ({ page }) => {
