@@ -3,14 +3,14 @@ version: "3.5"
 
 services:
   # AF: TODO: Fin.
-  node1:
-    build:
-      context: ./
-      dockerfile: Dockerfile.node1
-    volumes:
-      # Настройки.
-      - ./node1/entrypoint.sh:/entrypoint.sh
-      - ./node1/share/:/share/
+  # node1:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile.node1
+  #   volumes:
+  #     # Настройки.
+  #     - ./node1/entrypoint.sh:/entrypoint.sh
+  #     - ./node1/share/:/share/
 
   # AF: TODO: Fin.
   pw1:
@@ -18,11 +18,9 @@ services:
       context: ./
       dockerfile: Dockerfile.pw1
     ports:
-      # AF: TODO: Fin. Это "UI mode".
-      - 3333:3333
+      - 3333:3333   # Это UI mode.
     volumes:
-      # Настройки.
-      # AF: TODO: Сначала диры, потом файлы.
+      # Настройки. Логический порядок.
       - ./pw1/share/:/share/
       - ./pw1/comfort.sh:/etc/profile.d/comfort.sh
       - ./pw1/entrypoint.sh:/entrypoint.sh
