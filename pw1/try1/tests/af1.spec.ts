@@ -2,18 +2,19 @@
 import { expect, test } from '@playwright/test';
 
 import * as cmpCat from '../lib/cmpCat';
+import * as env from '../lib/env';
 import * as pageCat from '../lib/pageCat';
 import * as preset from '../lib/preset';
 import * as setup from '../lib/setup';
 import * as util from '../lib/util';
 
-// ЦТ: Логинимся и шастаем по меню админки.
-// test('fefe', async ({ page }) => {
-
-// })
-
 // AF: TODO: Fin.
 const target = setup.target.QA;
+
+test('fefe', async () => {
+  const creds = preset.auth.SUPER;
+  console.log('creds', creds);
+});
 
 // ЦТ: Логинимся корректным логином, переходим на "ФиР".
 test.skip('hehe', async ({ page }) => {

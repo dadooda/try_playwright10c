@@ -3,6 +3,7 @@
 # AF: TODO: Fin.
 /node1/share/*
 !/node1/share/.keep
+/pw1/.env
 /pw1/data/*
 !/pw1/data/.keep
 /pw1/share/*

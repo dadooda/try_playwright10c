@@ -45,7 +45,8 @@ COPY --chown=root ${ME}/sudo_nopasswd /etc/sudoers.d
 # Дальше всё от имени Васи.
 USER ${JOE}
 
-WORKDIR /home/${JOE}
+# AF: TODO: Не страшно, это последняя строка.
+WORKDIR /home/${JOE}/try1
 
 # Умную донастройку и запуск сделает скрипт.
 ENTRYPOINT ["/entrypoint.sh"]

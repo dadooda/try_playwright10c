@@ -4,6 +4,7 @@
  * @module
  */
 
+import * as env from './env';
 import { Creds } from './type';
 
 /**
@@ -14,8 +15,10 @@ export module auth {
   /** Супер-админ. */
   export const SUPER: Creds = {
     // AF: TODO: Системно решил с хранением credentials за пределами репы.
-    email: 'test_admin@inventos.ru',
-    password: 'gk54aerpgp3k4',
+    // email: 'test_admin@inventos.ru',
+    // password: 'gk54aerpgp3k4',
+    email: env.require('U_SUPER_EMAIL'),
+    password: env.require('U_SUPER_PASSWORD'),
   };
 
   /** Админ ОТР. */
