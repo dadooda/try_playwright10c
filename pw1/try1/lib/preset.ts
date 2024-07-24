@@ -15,8 +15,8 @@ export module auth {
   // AF: TODO: Fin.
   export const WC = {
     super: Creds({
-      email: env.require(`U_WC_SUPER_EMAIL`),
-      password: env.require(`U_WC_SUPER_PASSWORD`),
+      email: env.fetch(`U_WC_SUPER_EMAIL`),
+      password: env.fetch(`U_WC_SUPER_PASSWORD`),
     }),
   };
 

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+      "target": "ES2022",
+
+      "experimentalDecorators": true,
+      "module": "commonjs",
+      "moduleResolution": "Node",
+      // AF: TODO: Просто `out/`,
+      "outDir": "../tests-out/",
+      "sourceMap": true,
+  }
+}

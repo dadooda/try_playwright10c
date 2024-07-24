@@ -20,16 +20,12 @@ const ckBname = `${varPath}/cookies.json`;
 
 const consumerSleep = async () => sleep(300);
 
-
-
-
-
 test('producer', async () => {
-  const m = (...args) => console.log('\x1b[32mproducer(): \x1b[0m', ...args);
+  const m = (...args) => console.log('\x1b[32mproducer():\x1b[0m', ...args);
   m('process.cwd()', process.cwd());
-  // const sd = new SyncData({ fn: 'var/persist/999/cookies.json' });
-  // m('sd.randon()', sd.randon());
-  // m('sd.randon()', sd.randon());
+  const sd = new SyncData({ fn: 'var/persist/999/cookies.json' });
+  m('sd.randon', sd.randon);
+  m('sd.randon', sd.randon);
 });
 
 test('consumer 1', async () => {
@@ -59,7 +55,7 @@ test('consumer 2', async () => {
   }
 
   @Memoize()
-  public randon() {
+  public get randon() {
     return Math.random();
   }
 
