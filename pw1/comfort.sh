@@ -9,7 +9,7 @@ _CMF_UI_PORT="3333"
 # Запускаем тесты.
 t() {
   _cmf_ensure_testdir || return 1
-  (set -x; npx playwright test)
+  (set -x; npx playwright test "$@")
 }
 
 # Запускаем тесты в режиме UI. 🤘
@@ -22,7 +22,7 @@ ui() {
     --ui-port ${_CMF_UI_PORT}
   )
 
-  (set -x; npx playwright test ${A[@]})
+  (set -x; npx playwright test ${A[@]} "$@")
 }
 
 #---------------------------------------

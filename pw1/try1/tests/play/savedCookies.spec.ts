@@ -1,4 +1,9 @@
 
+/**
+ * Здесь в одном тесте воруем cookies, а в других -- используем для быстрого входа.
+ * @module
+ */
+
 import { Cookie, test } from '@playwright/test';
 
 import * as pageCat from '../../lib/pageCat';
