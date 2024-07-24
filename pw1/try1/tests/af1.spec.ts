@@ -1,5 +1,5 @@
 
-import { expect, test } from '@playwright/test';
+import { Cookie, expect, test } from '@playwright/test';
 
 import * as cmpCat from '../lib/cmpCat';
 import * as env from '../lib/env';
@@ -13,13 +13,28 @@ const creds = preset.auth.WC.super;
 const target = setup.target.QA;
 
 // ЦТ: Логинимся и воруем реквизиты для быстрого входа.
-test('fefe', async ({ page }) => {
+test('fefe', async ({ browser, context, page }) => {
   await page.goto(`${target.url}/admin`);
 
   const lg = new pageCat.Login({ page });
   await lg.fillEnterSuccess(creds);
 
-  await util.sleep(5000);
+  // console.log('browser.storageState', browser.options.storageState);
+  const coo = await context.cookies();
+  console.log('coo', coo);
+  console.log('coo.length', coo.length);
+
+  const shcoo = coo.map((ck) => { return { name: ck.name, value: ck.value }; });
+  console.log('shcoo', shcoo);
+
+  const ours = coo.filter((ck) => ck.name == '_webcaster_new_session');
+  console.log('ours', ours);
+
+  // const proper = coo.find()
+
+  // console.log('context.cookies', await context.cookies());
+  // console.log('context.storageState', context.storageState);
+
 });
 
 // ЦТ: Логинимся корректным логином, переходим на "ФиР".
