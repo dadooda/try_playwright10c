@@ -15,7 +15,7 @@ import * as setup from '../../lib/setup';
 const creds = preset.auth.WC.super;
 const target = setup.target.QA;
 
-test('Try `test.step`', async ({ page }) => {
+test('try `test.step`', async ({ page }) => {
   await test.step('Шуры', async () => {
     await page.goto(`${target.url}/admin`);
   })

@@ -14,6 +14,8 @@ const target = setup.target.QA;
 
 // ЦТ: Логинимся и воруем реквизиты для быстрого входа.
 test('fefe', async ({ browser, context, page }) => {
+  const m = (...args) => console.log('\x1b[1;32mfefe(): \x1b[0m', ...args);
+
   await page.goto(`${target.url}/admin`);
 
   const lg = new pageCat.Login({ page });
@@ -21,12 +23,10 @@ test('fefe', async ({ browser, context, page }) => {
 
   // console.log('browser.storageState', browser.options.storageState);
   const coo = await context.cookies();
-  console.log('coo', coo);
-  console.log('coo.length', coo.length);
+  m('coo', coo);
+  m('coo.length', coo.length);
 
-  const shcoo = coo.map((ck) => { return { name: ck.name, value: ck.value }; });
-  console.log('shcoo', shcoo);
-
+  // Выбираем только нашинские cookies.
   const ours = coo.filter((ck) => ck.name == '_webcaster_new_session');
   console.log('ours', ours);
 
