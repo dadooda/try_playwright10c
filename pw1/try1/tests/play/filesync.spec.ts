@@ -5,49 +5,67 @@
  * @module
  */
 
+import { Memoize } from 'typescript-memoize';
+
 import { test } from '@playwright/test';
 
-import * as sema from '../../lib/sema';
 import { sleep } from '../../lib/util';
 
 // AF: TODO: Fin.
 // const creds = preset.auth.WC.super;
 // const target = setup.target.QA;
 
-const tpi = () => process.env['TEST_PARALLEL_INDEX'];
-const twi = () => process.env['TEST_WORKER_INDEX'];
+const varPath = `var/${process.ppid}`;
+const ckBname = `${varPath}/cookies.json`;
 
 const consumerSleep = async () => sleep(300);
 
-test('create data', () => {
-  console.log('sema.randon', sema.randon);
-  const env = process.env;
-  console.log('tpi()', tpi());
-  console.log('twi()', twi());
-  console.log('process.env["_"]', process.env["_"]);
-  console.log('Object.keys(env).sort()', Object.keys(env).sort());
-  console.log('process.pid', process.pid);
-  console.log('process.ppid', process.ppid);
+
+
+
+
+test('producer', async () => {
+  const m = (...args) => console.log('\x1b[32mproducer(): \x1b[0m', ...args);
+  m('process.cwd()', process.cwd());
+  // const sd = new SyncData({ fn: 'var/persist/999/cookies.json' });
+  // m('sd.randon()', sd.randon());
+  // m('sd.randon()', sd.randon());
 });
 
-test('check pid 2', () => {
+test('consumer 1', async () => {
   await consumerSleep();
-  console.log('sema.randon', sema.randon);
-  console.log('tpi()', tpi());
-  console.log('twi()', twi());
-  console.log('process.pid', process.pid);
-  console.log('process.ppid', process.ppid);
 });
 
-test('check pid 3', () => {
-  console.log('sema.randon', sema.randon);
-  console.log('tpi()', tpi());
-  console.log('twi()', twi());
-  console.log('process.pid', process.pid);
-  console.log('process.ppid', process.ppid);
+test('consumer 2', async () => {
+  await consumerSleep();
 });
 // test.describe('consume data', () => {
 //   test('consume 1', () => {
 
 //   });
 // });
+
+//--------------------------------------
+
+/**
+ * Поставщик и потребитель синхронных файловых данных.
+ */
+ class SyncData {
+  /** Имя файла с данными. */
+  private readonly fn: string;
+
+  constructor({ fn }: { fn: string }) {
+    this.fn = fn;
+  }
+
+  @Memoize()
+  public randon() {
+    return Math.random();
+  }
+
+  // public async provide() {
+
+  // }
+
+
+}
