@@ -9,21 +9,22 @@ import * as setup from '../lib/setup';
 import * as util from '../lib/util';
 
 // AF: TODO: Fin.
+const creds = preset.auth.WC.super;
 const target = setup.target.QA;
 
-test('fefe', async () => {
-  const creds = preset.auth.SUPER;
-  console.log('creds', creds);
+// ЦТ: Логинимся и воруем реквизиты для быстрого входа.
+test('fefe', async ({ page }) => {
+  await page.goto(`${target.url}/admin`);
+
+  const lg = new pageCat.Login({ page });
+  await lg.fillEnterSuccess(creds);
+
+  await util.sleep(5000);
 });
 
 // ЦТ: Логинимся корректным логином, переходим на "ФиР".
 test.skip('hehe', async ({ page }) => {
   // test.setTimeout(10000);
-
-  // AF: TODO: Fin.
-  const target = setup.target.QA;
-  // const target = setup.target.STG2;
-  const creds = preset.auth.SUPER;
 
   await page.goto(`${target.url}/admin`);
   console.log('target', target);

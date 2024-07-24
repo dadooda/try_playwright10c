@@ -1,6 +1,6 @@
 
 /**
- * Типы для всякого разного.
+ * Разные типы.
  * @module
  */
 
@@ -13,6 +13,12 @@ export interface Target {
   name: string;
 
   url: string;
+}
+
+//-------------------------------------- Inline-типизаторы
+
+export function Creds(obj: Creds) {
+  return obj;
 }
 
 //--------------------------------------

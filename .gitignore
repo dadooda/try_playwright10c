@@ -6,6 +6,7 @@
 /pw1/.env
 /pw1/data/*
 !/pw1/data/.keep
+/pw1/try1/node_modules/
 /pw1/share/*
 !/pw1/share/.keep
 
