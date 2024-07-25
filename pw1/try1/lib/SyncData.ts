@@ -40,7 +40,6 @@ export class SyncData {
 
     // Ждём появления семафорной диры.
     while (true) {
-      m('lupe...');
       try {
         // Щупаем объект файловой системы.
         const st = await fs.stat(pname);
@@ -50,9 +49,7 @@ export class SyncData {
 
         // Дождались. Можно читать данные.
         break;
-      } catch {
-        m('stat no luck');
-      }
+      } catch {}
 
       await sleep(this.consumerLoopDelay);
     } // while
@@ -66,8 +63,6 @@ export class SyncData {
    * @param bname Базовое имя файла, например `'cookies.json'`.
    */
   async produce(bname: string, content: string): Promise<void> {
-    const m = (...args) => console.log('\x1b[32mproduce():\x1b[0m', ...args);
-
     const fname = pth.join(await this.conveyPath(), bname);
     const pname = this.makeSemaPname(fname);
 
@@ -76,11 +71,7 @@ export class SyncData {
     // Раз нас вызвали, значит данные нужно записать заново.
     try {
       await fs.rmdir(pname);
-      m('rmdir done');
     } catch {}
-
-    // AF: TODO: Fin.
-    await sleep(2000);
 
     // Пишем данные, создаём семафор.
     await fs.writeFile(fname, content);
