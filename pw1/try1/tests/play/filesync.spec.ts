@@ -5,10 +5,9 @@
  * @module
  */
 
-import { Memoize } from 'typescript-memoize';
-
 import { test } from '@playwright/test';
 
+import { SyncData } from '../../lib/SyncData';
 import { sleep } from '../../lib/util';
 
 // AF: TODO: Fin.
@@ -23,9 +22,12 @@ const consumerSleep = async () => sleep(300);
 test('producer', async () => {
   const m = (...args) => console.log('\x1b[32mproducer():\x1b[0m', ...args);
   m('process.cwd()', process.cwd());
-  const sd = new SyncData({ fn: 'var/persist/999/cookies.json' });
-  m('sd.randon', sd.randon);
-  m('sd.randon', sd.randon);
+  const sd = new SyncData({ path: 'var/persist/999/' });
+  await sd.produce('kk.txt', `mkk ${Math.random()}`);
+  // m('sd.conveyPath()', await sd.conveyPath());
+
+  // m('sd.randon', sd.randon);
+  // m('sd.randon', sd.randon);
 });
 
 test('consumer 1', async () => {
@@ -43,25 +45,3 @@ test('consumer 2', async () => {
 
 //--------------------------------------
 
-/**
- * Поставщик и потребитель синхронных файловых данных.
- */
- class SyncData {
-  /** Имя файла с данными. */
-  private readonly fn: string;
-
-  constructor({ fn }: { fn: string }) {
-    this.fn = fn;
-  }
-
-  @Memoize()
-  public get randon() {
-    return Math.random();
-  }
-
-  // public async provide() {
-
-  // }
-
-
-}
