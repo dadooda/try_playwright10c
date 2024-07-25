@@ -17,13 +17,18 @@ import { sleep } from '../../lib/util';
 const varPath = `var/${process.ppid}`;
 const ckBname = `${varPath}/cookies.json`;
 
-const consumerSleep = async () => sleep(300);
+// AF: TODO: Fin.
+// const consumerSleep = async () => sleep(300);
+
+const sd = new SyncData({ path: 'var/persist/999/' });
+
+// test.describe.configure({ mode: 'parallel' });
 
 test('producer', async () => {
   const m = (...args) => console.log('\x1b[32mproducer():\x1b[0m', ...args);
-  m('process.cwd()', process.cwd());
-  const sd = new SyncData({ path: 'var/persist/999/' });
+  m('hey');
   await sd.produce('kk.txt', `mkk ${Math.random()}`);
+  m('after produce');
   // m('sd.conveyPath()', await sd.conveyPath());
 
   // m('sd.randon', sd.randon);
@@ -31,17 +36,18 @@ test('producer', async () => {
 });
 
 test('consumer 1', async () => {
-  await consumerSleep();
+  const m = (...args) => console.log('\x1b[32mconsumer1():\x1b[0m', ...args);
+  test.setTimeout(3000);
+  const content = await sd.consume('kk.txt');
+  m('content', content);
 });
 
 test('consumer 2', async () => {
-  await consumerSleep();
+  const m = (...args) => console.log('\x1b[32mconsumer2():\x1b[0m', ...args);
+  test.setTimeout(3000);
+  const content = await sd.consume('kk.txt');
+  m('content', content);
 });
-// test.describe('consume data', () => {
-//   test('consume 1', () => {
-
-//   });
-// });
 
 //--------------------------------------
 

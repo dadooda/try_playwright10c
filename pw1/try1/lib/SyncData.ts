@@ -3,6 +3,8 @@ import * as fs from 'fs/promises';
 import * as pth from 'path';
 import { Memoize } from 'typescript-memoize';
 
+import { sleep } from './util';
+
 /**
  * Поставщик и потребитель синхронных файловых данных.
  */
@@ -10,16 +12,53 @@ export class SyncData {
   /** Путь к данным. */
   private readonly path: string;
 
-  constructor({ path }: { path: string }) {
+  private readonly consumerBootDelay: number;
+  private readonly consumerLoopDelay: number;
+
+  constructor({ consumerBootDelay, consumerLoopDelay, path }: {
+    consumerBootDelay?: number,
+    consumerLoopDelay?: number,
+    path: string,
+  }) {
     this.path = path;
+    this.consumerBootDelay = consumerBootDelay || 50;
+    this.consumerLoopDelay = consumerLoopDelay || 50;
   }
 
   /**
    * Загружаем данные из файла по мере его готовности.
    * @param bname
    */
-  async consume(bname: string): string {
+  async consume(bname: string): Promise<string> | never {
+    const m = (...args) => console.log('\x1b[32mfunc():\x1b[0m', ...args);
 
+    const fname = pth.join(await this.conveyPath(), bname);
+    const pname = this.makeSemaPname(fname);
+
+    // Делаем стартовую паузу, чтобы продюсер успел раньше нас.
+    await sleep(this.consumerBootDelay);
+
+    // Ждём появления семафорной диры.
+    while (true) {
+      m('lupe...');
+      try {
+        // Щупаем объект файловой системы.
+        const st = await fs.stat(pname);
+
+        // Если мы здесь, значит что-то существует. Это дира?
+        if (!st.isDirectory()) throw new Error(`Invalid semaphore: ${_(pname)}`)
+
+        // Дождались. Можно читать данные.
+        break;
+      } catch {
+        m('stat no luck');
+      }
+
+      await sleep(this.consumerLoopDelay);
+    } // while
+
+    // Читаем данные и возвращаем их.
+    return (await fs.readFile(fname)).toString();
   }
 
   /**
@@ -27,20 +66,23 @@ export class SyncData {
    * @param bname Базовое имя файла, например `'cookies.json'`.
    */
   async produce(bname: string, content: string): Promise<void> {
-    const m = (...args) => console.log('\x1b[32mprovide():\x1b[0m', ...args);
+    const m = (...args) => console.log('\x1b[32mproduce():\x1b[0m', ...args);
 
     const fname = pth.join(await this.conveyPath(), bname);
     const pname = this.makeSemaPname(fname);
-    m('pname', pname);
 
     // Безусловно сносим семафорную диру.
-    // Продюсер -- только мы, и больше никто.
+    // Продюсер -- только мы и больше никто.
     // Раз нас вызвали, значит данные нужно записать заново.
     try {
-      await fs.rmdir(pname, { });
-      m('rmdir ok');
+      await fs.rmdir(pname);
+      m('rmdir done');
     } catch {}
 
+    // AF: TODO: Fin.
+    await sleep(2000);
+
+    // Пишем данные, создаём семафор.
     await fs.writeFile(fname, content);
     await fs.mkdir(pname);
   }
@@ -50,17 +92,19 @@ export class SyncData {
   /** Создаём директорию для данных и возвращаем путь к ней. */
   @Memoize()
   private async conveyPath(): Promise<string> {
-    // AF: TODO: Fin.
-    const m = (...args) => console.log('\x1b[32mpath():\x1b[0m', ...args);
     await fs.mkdir(this.path, { recursive: true });
     return this.path;
   }
 
   /**
-   * Форматируем имя семафорной директории.
+   * Составляем имя семафорной директории.
    * @param fname Например, `'/path/to/file.json'`.
    */
   private makeSemaPname(fname: string): string {
     return `${fname}.ready`;
   }
 }
+
+//--------------------------------------
+
+const _ = JSON.stringify;

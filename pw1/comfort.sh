@@ -30,6 +30,15 @@ ui() {
   _cmf_ui_compiled
 }
 
+# Запускаем UI и watch-компиляцию.
+uiw() {(
+  echo "Starting background UI server..."
+  _cmf_ui_compiled &
+  sleep 1
+  echo "Starting TS compilation in watch mode. Press Ctrl+C to terminate."
+  watch
+)}
+
 # Следим за изменениями и перекомпилируем `tests/` когда надо.
 watch() {
   _cmf_ensure_testpwd || return 1
