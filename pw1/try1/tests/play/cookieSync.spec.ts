@@ -1,7 +1,7 @@
 
 /**
  * На базе `SyncData` одной частью логинимся и воруем cookies,
- * а другими -- потребляем эти данные и входим с готовой сессией.
+ * а другими -- потребляем эти данные и входим ("вламываемся") с готовой сессией.
  * @module
  */
 
@@ -39,14 +39,14 @@ test('log in and save cookies', async ({ context, page }) => {
   m('after produce');
 });
 
-test('barge into videofiles', async ({ context, page }) => {
-  const m = (...args) => console.log('\x1b[32mvideofls():\x1b[0m', ...args);
+test('barge into clients', async ({ context, page }) => {
+  const m = (...args) => console.log('\x1b[32msettings():\x1b[0m', ...args);
   m('hey');
   const cookies = JSON.parse(await sd.consume(COOKIES_BNAME));
   m('cookies ready');
   await context.addCookies(cookies);
 
-  await page.goto(`${target.url}/admin/video_files`);
+  await page.goto(`${target.url}/admin/clients`);
 
   await sleep(1000);
 });
@@ -59,6 +59,30 @@ test('barge into settings', async ({ context, page }) => {
   await context.addCookies(cookies);
 
   await page.goto(`${target.url}/admin/settings`);
+
+  await sleep(1000);
+});
+
+test('barge into users', async ({ context, page }) => {
+  const m = (...args) => console.log('\x1b[32mvideofls():\x1b[0m', ...args);
+  m('hey');
+  const cookies = JSON.parse(await sd.consume(COOKIES_BNAME));
+  m('cookies ready');
+  await context.addCookies(cookies);
+
+  await page.goto(`${target.url}/admin/users`);
+
+  await sleep(1000);
+});
+
+test('barge into videofiles', async ({ context, page }) => {
+  const m = (...args) => console.log('\x1b[32mvideofls():\x1b[0m', ...args);
+  m('hey');
+  const cookies = JSON.parse(await sd.consume(COOKIES_BNAME));
+  m('cookies ready');
+  await context.addCookies(cookies);
+
+  await page.goto(`${target.url}/admin/video_files`);
 
   await sleep(1000);
 });

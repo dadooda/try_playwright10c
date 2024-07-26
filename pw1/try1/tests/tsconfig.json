@@ -5,8 +5,7 @@
       "experimentalDecorators": true,
       "module": "commonjs",
       "moduleResolution": "Node",
-      // AF: TODO: Просто `out/`,
-      "outDir": "../tests-out/",
+      "outDir": "../out/",
       "sourceMap": true,
   }
 }

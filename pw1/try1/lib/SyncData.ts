@@ -9,25 +9,28 @@ import { sleep } from './util';
  * Поставщик и потребитель синхронных файловых данных.
  */
 export class SyncData {
-  /** Путь к данным. */
-  private readonly path: string;
-
   private readonly consumerBootDelay: number;
   private readonly consumerLoopDelay: number;
+  private readonly path: string;
 
   constructor({ consumerBootDelay, consumerLoopDelay, path }: {
+    /** Задержка `consume()` при старте, миллисекунд. По умолчанию 50. */
     consumerBootDelay?: number,
+
+    /** Задержка `consume()` между циклами ожидания семафора, миллисекунд. По умолчанию 50. */
     consumerLoopDelay?: number,
+
+    /** Рабочая директория для файлов и семафоров. */
     path: string,
   }) {
-    this.path = path;
     this.consumerBootDelay = consumerBootDelay || 50;
     this.consumerLoopDelay = consumerLoopDelay || 50;
+    this.path = path;
   }
 
   /**
    * Загружаем данные из файла по мере его готовности.
-   * @param bname
+   * @param bname Базовое имя файла, например `'cookies.json'`.
    */
   async consume(bname: string): Promise<string> | never {
     const m = (...args) => console.log('\x1b[32mfunc():\x1b[0m', ...args);
@@ -41,7 +44,7 @@ export class SyncData {
     // Ждём появления семафорной диры.
     while (true) {
       try {
-        // Щупаем объект файловой системы.
+        // Щупаем объект файловой системы. Если нету -- вылетит в `catch`.
         const st = await fs.stat(pname);
 
         // Если мы здесь, значит что-то существует. Это дира?
