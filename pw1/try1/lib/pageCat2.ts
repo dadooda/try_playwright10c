@@ -13,7 +13,6 @@
  */
 
 import * as pth from 'path';
-import { ppid } from 'process';
 
 import { expect, Page } from '@playwright/test';
 
@@ -64,6 +63,16 @@ export class LoginForm extends Base {
     password: 'Пароль',
   };
 
+  // AF: TODO: Можно сделать клёвую многоэтапную функцию с вариантами.
+  // Без этого меня беспокоит, что имена методов тупые.
+  // fill({ creds: …, andEnter: true, andWaitSuccess: true })
+
+  /** Просто вводим реквизиты. */
+  async fill(creds: Creds): Promise<void> {
+    await this.page.getByLabel(this.LABEL.email).fill(creds.email);
+    await this.page.getByLabel(this.LABEL.password).fill(creds.password);
+  }
+
   /**
    * Вводим реквизиты и жмакаем кнопку «Войти».
    */
@@ -78,13 +87,6 @@ export class LoginForm extends Base {
   async fillEnterSuccess(creds: Creds): Promise<void> {
     await this.fillEnter(creds);
     await this.page.waitForSelector(cmpCat.Navigation.SELECTOR.navbar);
-  }
-
-  //--------------------------------------
-
-  private async fill(creds: Creds): Promise<void> {
-    await this.page.getByLabel(this.LABEL.email).fill(creds.email);
-    await this.page.getByLabel(this.LABEL.password).fill(creds.password);
   }
 }
 

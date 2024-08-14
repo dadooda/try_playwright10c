@@ -18,7 +18,7 @@ const COOKIES_BNAME = 'cookies.json';
 
 const creds = preset.auth.WC.super;
 const target = setup.target.QA;
-const sd = new SyncData({ path: `var/persist/${process.ppid}/` });
+const sd = new SyncData({ path: `var/persist/cookieSync/${process.ppid}/` });
 
 // Если раскомментировать, то будет настоящая параллельность,
 // как между разными файлами.
@@ -30,10 +30,11 @@ test('log in and save cookies', async ({ context, page }) => {
 
   // Типа настоящий поставщик.
   if (true) {
-    await sd.produceRight(COOKIES_BNAME, async () => {
+    await sd.produce(COOKIES_BNAME, async () => {
       const dt = (...args) => console.log('\x1b[32mcb():\x1b[0m', ...args);
       dt('hey');
 
+      // AF: TODO: А почему мы особо идём на какой-то URL? Вроде страница сама может.
       await page.goto(`${target.url}/admin`);
 
       const lg = new pageCat.Login({ page });
@@ -44,28 +45,6 @@ test('log in and save cookies', async ({ context, page }) => {
 
       return JSON.stringify(cookies);
     });
-  }
-
-  // Игружечный поставщик.
-  // AF: TODO: CUP.
-  if (false) {
-    await sd.produceRight(COOKIES_BNAME, async () => {
-      await sleep(2000);
-      return 'ho ho ho';
-    })
-  }
-
-  // НЕТОЧНЫЙ вариант, где `produce()` в конце.
-  if (false) {
-    await page.goto(`${target.url}/admin`);
-
-    const lg = new pageCat.Login({ page });
-    await lg.fillEnterSuccess(creds);
-
-    const cookies = wc.filterLoginCookies(await context.cookies());
-
-    await sd.produce(COOKIES_BNAME, JSON.stringify(cookies));
-    dt('after produce');
   }
 
   dt('ret');

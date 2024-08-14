@@ -66,32 +66,9 @@ export class SyncData {
   /**
    * Поставляем данные в файл и сигналим о готовности.
    * @param bname Базовое имя файла, например `'cookies.json'`.
-   * @param content Содержимое.
+   * @param contentFn Асинхронный callback для генерации данных.
    */
-  async produce(bname: string, content: string): Promise<void> {
-    // TODO: Fin. См. `produceRight()`.
-
-    const fname = pth.join(await this.conveyPath(), bname);
-    const pname = this.makeSemaPname(fname);
-
-    // С ходу сносим семафорную диру.
-    // Продюсер -- только мы и больше никто.
-    // Раз нас вызвали, значит данные нужно поставить заново.
-    try {
-      await fs.rmdir(pname);
-    } catch {}
-
-    // Пишем данные, создаём семафор.
-    await fs.writeFile(fname, content);
-    await fs.mkdir(pname);
-  }
-
-  /**
-   * Поставляем данные в файл и сигналим о готовности.
-   * @param bname Базовое имя файла, например `'cookies.json'`.
-   * @param content Асинхронный callback для генерации данных.
-   */
-  async produceRight(bname: string, contentFn: () => Promise<string>): Promise<void> {
+  async produce(bname: string, contentFn: () => Promise<string>): Promise<void> {
     const dt = (...args) => console.log('\x1b[32mproduceRight():\x1b[0m', ...args);
     dt('hey');
 

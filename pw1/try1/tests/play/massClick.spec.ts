@@ -29,19 +29,20 @@ const sd = new SyncData({ path: `var/persist/${process.ppid}/` });
 // как между разными файлами.
 test.describe.configure({ mode: 'parallel' });
 
-test('log in and save cookies', async ({ context, page }) => {
-  const dt = (...args) => console.log('\x1b[32mlog_in():\x1b[0m', ...args);
-  dt('hey');
+// AF: TODO: Fin.
+// test('log in and save cookies', async ({ context, page }) => {
+//   const dt = (...args) => console.log('\x1b[32mlog_in():\x1b[0m', ...args);
+//   dt('hey');
 
-  dt('logging in...');
-  const lg = new pageCat.LoginForm({ target, page });
-  await lg.goto();
-  await lg.fillEnterSuccess(creds);
-  const cookies = wc.filterLoginCookies(await context.cookies());
-  dt('producing...');
-  await sd.produce(COOKIES_BNAME, JSON.stringify(cookies));
-  dt('ret');
-});
+//   dt('logging in...');
+//   const lg = new pageCat.LoginForm({ target, page });
+//   await lg.goto();
+//   await lg.fillEnterSuccess(creds);
+//   const cookies = wc.filterLoginCookies(await context.cookies());
+//   dt('producing...');
+//   await sd.produce(COOKIES_BNAME, JSON.stringify(cookies));
+//   dt('ret');
+// });
 
 ArrayOfStep([
   {
