@@ -7,6 +7,8 @@ import { sleep } from './util';
 
 /**
  * Поставщик и потребитель синхронных файловых данных.
+ *
+ * Потребители ждут. Поставщик готовит данные и сигналит о готовности.
  */
 export class SyncData {
   private readonly consumerBootDelay: number;
@@ -29,7 +31,7 @@ export class SyncData {
   }
 
   /**
-   * Загружаем данные из файла по мере его готовности.
+   * Потребляем данные из файла, как только он будет готов.
    * @param bname Базовое имя файла, например `'cookies.json'`.
    */
   async consume(bname: string): Promise<string> | never {
@@ -62,22 +64,53 @@ export class SyncData {
   }
 
   /**
-   * Сохраняем данные в файл и сигналим о готовности.
+   * Поставляем данные в файл и сигналим о готовности.
    * @param bname Базовое имя файла, например `'cookies.json'`.
+   * @param content Содержимое.
    */
   async produce(bname: string, content: string): Promise<void> {
+    // TODO: Fin. См. `produceRight()`.
+
     const fname = pth.join(await this.conveyPath(), bname);
     const pname = this.makeSemaPname(fname);
 
-    // Безусловно сносим семафорную диру.
+    // С ходу сносим семафорную диру.
     // Продюсер -- только мы и больше никто.
-    // Раз нас вызвали, значит данные нужно записать заново.
+    // Раз нас вызвали, значит данные нужно поставить заново.
     try {
       await fs.rmdir(pname);
     } catch {}
 
     // Пишем данные, создаём семафор.
     await fs.writeFile(fname, content);
+    await fs.mkdir(pname);
+  }
+
+  /**
+   * Поставляем данные в файл и сигналим о готовности.
+   * @param bname Базовое имя файла, например `'cookies.json'`.
+   * @param content Асинхронный callback для генерации данных.
+   */
+  async produceRight(bname: string, contentFn: () => Promise<string>): Promise<void> {
+    const dt = (...args) => console.log('\x1b[32mproduceRight():\x1b[0m', ...args);
+    dt('hey');
+
+    const fname = pth.join(await this.conveyPath(), bname);
+    const pname = this.makeSemaPname(fname);
+
+    // С ходу сносим семафорную диру.
+    // Продюсер -- только мы и больше никто.
+    // Раз нас вызвали, значит данные нужно поставить заново.
+    try {
+      await fs.rmdir(pname);
+    } catch {}
+
+    // Получаем данные.
+    const cnt = await contentFn();
+    dt('cnt', cnt);
+
+    // Получаем данные. Пишем данные. Создаём семафор.
+    await fs.writeFile(fname, cnt);
     await fs.mkdir(pname);
   }
 
@@ -99,6 +132,6 @@ export class SyncData {
   }
 }
 
-//--------------------------------------
+//-------------------------------------- Служебное
 
 const _ = JSON.stringify;
